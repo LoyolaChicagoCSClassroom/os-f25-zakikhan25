@@ -15,6 +15,8 @@ SDIR = src
 
 OBJS = \
 	kernel_main.o \
+	drivers/fat.o \
+	drivers/ide.o \
 
 # Make sure to keep a blank line here after OBJS list
 
@@ -22,6 +24,10 @@ OBJ = $(patsubst %,$(ODIR)/%,$(OBJS))
 
 $(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) $(CFLAGS) -c -g -o $@ $^
+# Build object files from drivers/
+drivers/%.o: drivers/%.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 
 $(ODIR)/%.o: $(SDIR)/%.s
 	$(CC) $(CFLAGS) -c -g -o $@ $^

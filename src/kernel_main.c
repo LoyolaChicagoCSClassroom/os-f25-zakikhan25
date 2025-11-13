@@ -3,6 +3,8 @@
 #include "keyboard.h"
 #include "io.h"
 #include "page.h"
+#include "../drivers/fat.h"
+#include "../drivers/ide.h"
 
 /*
  * ==============================================
@@ -125,6 +127,26 @@ void main(void) {
     vga[1] = 0x1F00 | 'G';  // 'G' for Good :)
 
     esp_printf(putc, "PG written to screen (paging test)\r\n");
+    esp_printf(putc, "Starting FAT filesystem test...\r\n");
+
+    if (fatInit() == 0) {
+        esp_printf(putc, "FAT initialized successfully!\r\n");
+
+        struct file f;
+        if (fatOpen("HELLO.TXT", &f) == 0) {
+            esp_printf(putc, "File HELLO.TXT found! Size = %d bytes\r\n", f.file_size);
+
+            char buf[128];
+            int bytes = fatRead(&f, buf, sizeof(buf) - 1);
+            buf[bytes] = '\0';
+
+            esp_printf(putc, "Contents of HELLO.TXT:\r\n%s\r\n", buf);
+        } else {
+            esp_printf(putc, "HELLO.TXT not found in root directory.\r\n");
+        }
+    } else {
+        esp_printf(putc, "FAT initialization failed.\r\n");
+    }
 
     // ---------------------------------------------
     // 5. Halt the CPU

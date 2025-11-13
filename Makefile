@@ -29,6 +29,8 @@ ODIR := obj
 # C / ASM sources in your repo
 CSRC := \
   kernel_main.c \
+  drivers/fat.o \
+  drivers/ide.o \
   rprintf.c \
   interrupt.c \
   keyboard.c \
@@ -58,9 +60,17 @@ obj:
 $(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+$(ODIR)/%.o: $(DDIR)/%.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+
 # Assemble .s
 $(ODIR)/%.o: $(SDIR)/%.s
 	$(CC) $(ASFLAGS) -c -o $@ $<
+
+# Assemble .s from drivers/
+$(ODIR)/%.o: $(DDIR)/%.s
+	$(AS) $(ASFLAGS) -c -o $@ $<
 
 # --------- Disk image with GRUB ----------
 rootfs.img: kernel grub.cfg
