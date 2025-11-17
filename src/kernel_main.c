@@ -151,7 +151,10 @@ void main(void) {
     // ---------------------------------------------
     // 5. Halt the CPU
     // ---------------------------------------------
-    while (1) {
-        asm("hlt");
-    }
-}
+esp_printf(putc, "System halted. Exiting QEMU...\r\n");
+
+// small delay so output flushes
+for (volatile int i = 0; i < 1000000; i++);
+
+asm volatile("cli");   // disable interrupts
+asm volatile("hlt");   // halt CPU safely
