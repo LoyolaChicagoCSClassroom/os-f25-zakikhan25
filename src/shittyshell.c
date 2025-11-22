@@ -1,6 +1,6 @@
 /*
  * shittyshell.c
- * A very simple shell.
+ * A very shitty shell
  */
 
 #include <stdio.h>
@@ -20,14 +20,15 @@ int main(int argc, char **argv) {
         fflush(stdout);
 
         // 2. Read input line
-        if (getline(&line, &bufsize, stdin) == -1) {
-            perror("getline");
-            exit(1);
+        ssize_t nread = getline(&line, &bufsize, stdin);
+        if (nread == -1) {
+            printf("\n");
+            break;  // EOF, exit gracefully
         }
 
         // 3. Trim newline
-        if (line[strlen(line) - 1] == '\n') {
-            line[strlen(line) - 1] = '\0';
+        if (nread > 0 && line[nread - 1] == '\n') {
+            line[nread - 1] = '\0';
         }
 
         // If user enters empty line, continue

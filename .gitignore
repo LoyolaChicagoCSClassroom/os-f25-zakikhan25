@@ -4,3 +4,4 @@ rootfs.img
 obj/*
 *.swp
 *.swo
+src/shittyshell
