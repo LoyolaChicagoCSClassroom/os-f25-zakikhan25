@@ -1,36 +1,33 @@
-ENTRY(main)
+ENTRY(_start)
 OUTPUT_FORMAT(elf32-i386)
 
 SECTIONS
 {
+    /* Begin at 1 MiB, conventional place for kernels */
     . = 1M;
-
-    .text : {
+    
+    /* Multiboot header must be in first 8KB */
+    .multiboot : ALIGN(4) {
         *(.multiboot)
-        *(.text)
+	*(.text)
     }
-
-    .rodata : {
+    
+    .rodata : ALIGN(4K) {
         *(.rodata)
     }
-
-    .data : {
-        _start_data = .;
+    
+    .data : ALIGN(4K) {
+        start_data = .;
         *(.data)
-        _end_data = .;
+        end_data = .;
     }
-
-    .bss : {
-        _start_bss = .;
+    
+    .bss : ALIGN(4K) {
+        start_bss = .;
         *(.bss)
-        _end_bss = .;
+        *(COMMON)
+        end_bss = .;
     }
-
-    .stack : {
-        _start_stack = .;
-        *(.stack)
-        _end_stack = .;
-    }
-
-    _end_kernel = .;
+    
+    end_kernel = .;
 }
