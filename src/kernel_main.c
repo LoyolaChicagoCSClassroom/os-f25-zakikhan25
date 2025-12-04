@@ -71,7 +71,7 @@ void pic_init(void);
 // --------------------------------------------------
 // Kernel Entry Point
 // --------------------------------------------------
-void main(void) {
+void kernel_main(void) {
     clear_screen();
     esp_printf(putc, "CS 310 HW4: Paging Setup\r\n");
 
@@ -158,3 +158,4 @@ for (volatile int i = 0; i < 1000000; i++);
 
 asm volatile("cli");   // disable interrupts
 asm volatile("hlt");   // halt CPU safely
+}
